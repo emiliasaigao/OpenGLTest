@@ -19,7 +19,7 @@
 #define sprintf sprintf_s
 #include"stb_image_write.h"
 
-GLFWwindow* Init(int width, int height, std::string windowName = "渲染窗口");
+GLFWwindow* Init(int width, int height, std::string windowName = "Shading Window");
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -48,7 +48,7 @@ bool firstMouse = true;
 float lastX = 800.f / 2.0;
 float lastY = 600.f / 2.0;
 
-float deltaTime = 0.0f;	
+float deltaTime = 0.0f;
 float preTime = 0.0f;
 
 // 某些测试设置了↑↓键对一些效果进行开关
@@ -180,21 +180,21 @@ void matrixTest() {
     glEnableVertexAttribArray(1);
 
     Shader myshader("Source/shader/texVertexShader.glsl", "Source/shader/texFragmentShader.glsl");
-    
+
     stbi_set_flip_vertically_on_load(true);
     // 加载纹理
         // 生成纹理
     unsigned int texture1;
     glGenTextures(1, &texture1);
     glBindTexture(GL_TEXTURE_2D, texture1);
-        // 为当前绑定纹理设置环绕、过滤方式
+    // 为当前绑定纹理设置环绕、过滤方式
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT); // x轴超出部分重复映射
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // y轴超出部分重复映射
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
-        // 从文件中读数据
+    // 从文件中读数据
     unsigned char* data = stbi_load("Source/texture/container.jpg", &width, &height, &nrChannels, 0);
     if (data) {
         // 把纹理数据导入当前绑定的纹理
@@ -229,7 +229,7 @@ void matrixTest() {
         std::cout << "加载纹理失败！" << std::endl;
     }
     stbi_image_free(data1);
-    
+
 
     float mixvalue = 0.2;
     float speed = 1.f;
@@ -238,8 +238,8 @@ void matrixTest() {
     myshader.setInt("uTexture1", 0);
     myshader.setInt("uTexture2", 1);
 
-    
-    
+
+
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -259,9 +259,9 @@ void matrixTest() {
         glm::mat4 projection(1.f);
         projection = glm::perspective(glm::radians(mainCamera.Zoom), float(8.f / 6.f), 0.1f, 100.f);
 
-        myshader.setMat4f("model",glm::value_ptr(model));
-        myshader.setMat4f("view",glm::value_ptr(view));
-        myshader.setMat4f("projection",glm::value_ptr(projection));
+        myshader.setMat4f("model", glm::value_ptr(model));
+        myshader.setMat4f("view", glm::value_ptr(view));
+        myshader.setMat4f("projection", glm::value_ptr(projection));
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             mainCamera.processKeyBoard(Camera_Movement::FORWARD, deltaTime);
@@ -271,7 +271,7 @@ void matrixTest() {
             mainCamera.processKeyBoard(Camera_Movement::LEFT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             mainCamera.processKeyBoard(Camera_Movement::RIGHT, deltaTime);
-            
+
 
 
         if (mixvalue <= 1.0f && glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -322,48 +322,48 @@ void BlinPhongTest() {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 鼠标在屏幕范围内的时候不显示
 
     float vertices[] = {
-         //positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+        //positions          // normals           // texture coords
+       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+       0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+       0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+       -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+       -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+       0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+       0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+       0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f,  0.0f,  0.0f),
@@ -400,7 +400,7 @@ void BlinPhongTest() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
-    
+
     unsigned int lightVAO;
     glGenVertexArrays(1, &lightVAO);
     glBindVertexArray(lightVAO);
@@ -437,19 +437,19 @@ void BlinPhongTest() {
         BPShader.setMat4f("uProjection", glm::value_ptr(Projection));
         glm::mat4 Model(1.f);
         BPShader.setMat4f("uModel", glm::value_ptr(Model));
-        
+
         BPShader.setVec3f("uCameraPos", glm::value_ptr(mainCamera.Position));
         BPShader.setFloat("meterial.shininess", 32);
-        
+
         for (int i = 0; i < 4; ++i) {
             std::string str = std::string("pLight[") + std::to_string(i);
-            BPShader.setVec3f(str+std::string("].position"), glm::value_ptr(pointLightPositions[0]));
-            BPShader.setVec3f(str+std::string("].diffuse"), 0.8f, 0.8f, 0.8f);
-            BPShader.setVec3f(str+std::string("].specular"), 1.0f, 1.0f, 1.0f);
-            BPShader.setFloat(str+std::string("].Kc"), 1.0f);
-            BPShader.setFloat(str+std::string("].Kl"),0.09f);
-            BPShader.setFloat(str+std::string("].Kq"), 0.032f);
-            BPShader.setFloat(str+std::string("].intensity"), 1.f);
+            BPShader.setVec3f(str + std::string("].position"), glm::value_ptr(pointLightPositions[0]));
+            BPShader.setVec3f(str + std::string("].diffuse"), 0.8f, 0.8f, 0.8f);
+            BPShader.setVec3f(str + std::string("].specular"), 1.0f, 1.0f, 1.0f);
+            BPShader.setFloat(str + std::string("].Kc"), 1.0f);
+            BPShader.setFloat(str + std::string("].Kl"), 0.09f);
+            BPShader.setFloat(str + std::string("].Kq"), 0.032f);
+            BPShader.setFloat(str + std::string("].intensity"), 1.f);
         }
 
         BPShader.setVec3f("dLight.diffuse", 1.0f, 1.0f, 1.0f);
@@ -494,18 +494,18 @@ void BlinPhongTest() {
         BPShader.setMat3f("uNormModel", glm::value_ptr(normModel));
         BPShader.setMat4f("uModel", glm::value_ptr(Model));
         myModel.Draw(BPShader);
-         glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         lightShader.use();
         lightShader.setMat4f("uView", glm::value_ptr(View));
         lightShader.setMat4f("uProjection", glm::value_ptr(Projection));
         Model = glm::translate(Model, lightPos);
         Model = glm::scale(Model, glm::vec3(0.1f));
-         glm::mat4 rotate_Matrix = glm::rotate(glm::mat4(1.0f), 0.00005f, glm::vec3(0.0, 1.0, 0.0));
-         Model = rotate_Matrix * Model;
-         lightPos = glm::vec3(rotate_Matrix * glm::vec4(lightPos,1.0));
-         lightShader.setMat4f("uModel", glm::value_ptr(Model));
-        
+        glm::mat4 rotate_Matrix = glm::rotate(glm::mat4(1.0f), 0.00005f, glm::vec3(0.0, 1.0, 0.0));
+        Model = rotate_Matrix * Model;
+        lightPos = glm::vec3(rotate_Matrix * glm::vec4(lightPos, 1.0));
+        lightShader.setMat4f("uModel", glm::value_ptr(Model));
+
         glBindVertexArray(lightVAO);
         for (int i = 0; i < 4; ++i) {
             glm::mat4 model = glm::mat4(1.0f);
@@ -628,7 +628,7 @@ void frameBufferTest() {
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 鼠标在屏幕范围内的时候不显示
 
-    vector<vector<float>> quadVertices(4,vector<float>());
+    vector<vector<float>> quadVertices(4, vector<float>());
     quadVertices[0] = {
         // 左上角第一个窗口（两个三角形组成的矩形）
         // positions   // texCoords
@@ -641,7 +641,7 @@ void frameBufferTest() {
         -0.5f,  1.0f,  1.0f, 1.0f
     };
 
-    
+
     quadVertices[1] = {
         // 左边第二个窗口（两个三角形组成的矩形）
         // positions   // texCoords
@@ -687,9 +687,9 @@ void frameBufferTest() {
         glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * quadVertices[i].size(), &quadVertices[i][0], GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,4 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,4 * sizeof(float), (void*)(2 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
     }
 
 
@@ -759,7 +759,7 @@ void frameBufferTest() {
 
         // 切换帧缓冲对象，在这上面再画一次
         glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
-        glEnable(GL_DEPTH_TEST); 
+        glEnable(GL_DEPTH_TEST);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         BPShader.use();
@@ -769,7 +769,7 @@ void frameBufferTest() {
         // 切换回默认帧缓冲，关掉深度缓冲，把窗口画在最前面
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDisable(GL_DEPTH_TEST);
-        
+
         for (int i = 0; i < 4; ++i) {
             shaders[i]->use();
             glBindVertexArray(VAO[i]);
@@ -791,7 +791,7 @@ void geoShaderTest(void) {
     glEnable(GL_DEPTH_TEST);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 鼠标在屏幕范围内的时候不显示
-    
+
     vector<std::string> faces(6, "Source/skybox/sea/");
     faces[0] += "left.jpg";
     faces[1] += "right.jpg";
@@ -846,7 +846,7 @@ void geoShaderTest(void) {
         -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f
     };
-    
+
     // skybox VAO
     unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
@@ -1107,7 +1107,7 @@ void instancingTest() {
         modelShader.use();
         modelShader.setMat4f("uView", glm::value_ptr(View));
         modelShader.setMat4f("uProjection", glm::value_ptr(Projection));
-        
+
         Model = glm::translate(Model, glm::vec3(0.0f, -3.0f, 0.0f));
         Model = glm::scale(Model, glm::vec3(4.0f, 4.0f, 4.0f));
         modelShader.setMat4f("uModel", glm::value_ptr(Model));
@@ -1126,7 +1126,7 @@ void instancingTest() {
             glDrawElementsInstanced(GL_TRIANGLES, rock.meshes[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
             //glBindVertexArray(0);
         }
-        
+
         skyboxShader.use();
         glm::mat4 view = glm::mat4(glm::mat3(View)); // remove translation from the view matrix
         skyboxShader.setMat4f("uView", glm::value_ptr(view));
@@ -1164,48 +1164,48 @@ void shadowTest(void) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 鼠标在屏幕范围内的时候不显示
 
     float lightcube[] = {
-         //positions         
-        -0.5f, -0.5f, -0.5f, 
-        0.5f, -0.5f, -0.5f,  
-        0.5f,  0.5f, -0.5f,  
-        0.5f,  0.5f, -0.5f,  
-        -0.5f,  0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        
-        -0.5f, -0.5f,  0.5f, 
-        0.5f, -0.5f,  0.5f,  
-        0.5f,  0.5f,  0.5f,  
-        0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f, -0.5f,  0.5f, 
-        
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f,  0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        -0.5f, -0.5f,  0.5f, 
-        -0.5f,  0.5f,  0.5f, 
-        
-        0.5f,  0.5f,  0.5f,  
-        0.5f,  0.5f, -0.5f,  
-        0.5f, -0.5f, -0.5f,  
-        0.5f, -0.5f, -0.5f,  
-        0.5f, -0.5f,  0.5f,  
-        0.5f,  0.5f,  0.5f,  
-        
-        -0.5f, -0.5f, -0.5f, 
-        0.5f, -0.5f, -0.5f,  
-        0.5f, -0.5f,  0.5f,  
-        0.5f, -0.5f,  0.5f,  
-        -0.5f, -0.5f,  0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        
-        -0.5f,  0.5f, -0.5f, 
-        0.5f,  0.5f, -0.5f,  
-        0.5f,  0.5f,  0.5f,  
-        0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f,  0.5f, -0.5f
+        //positions         
+       -0.5f, -0.5f, -0.5f,
+       0.5f, -0.5f, -0.5f,
+       0.5f,  0.5f, -0.5f,
+       0.5f,  0.5f, -0.5f,
+       -0.5f,  0.5f, -0.5f,
+       -0.5f, -0.5f, -0.5f,
+
+       -0.5f, -0.5f,  0.5f,
+       0.5f, -0.5f,  0.5f,
+       0.5f,  0.5f,  0.5f,
+       0.5f,  0.5f,  0.5f,
+       -0.5f,  0.5f,  0.5f,
+       -0.5f, -0.5f,  0.5f,
+
+       -0.5f,  0.5f,  0.5f,
+       -0.5f,  0.5f, -0.5f,
+       -0.5f, -0.5f, -0.5f,
+       -0.5f, -0.5f, -0.5f,
+       -0.5f, -0.5f,  0.5f,
+       -0.5f,  0.5f,  0.5f,
+
+       0.5f,  0.5f,  0.5f,
+       0.5f,  0.5f, -0.5f,
+       0.5f, -0.5f, -0.5f,
+       0.5f, -0.5f, -0.5f,
+       0.5f, -0.5f,  0.5f,
+       0.5f,  0.5f,  0.5f,
+
+       -0.5f, -0.5f, -0.5f,
+       0.5f, -0.5f, -0.5f,
+       0.5f, -0.5f,  0.5f,
+       0.5f, -0.5f,  0.5f,
+       -0.5f, -0.5f,  0.5f,
+       -0.5f, -0.5f, -0.5f,
+
+       -0.5f,  0.5f, -0.5f,
+       0.5f,  0.5f, -0.5f,
+       0.5f,  0.5f,  0.5f,
+       0.5f,  0.5f,  0.5f,
+       -0.5f,  0.5f,  0.5f,
+       -0.5f,  0.5f, -0.5f
     };
     unsigned int lightVAO, lightVBO;
     glGenBuffers(1, &lightVBO);
@@ -1260,17 +1260,17 @@ void shadowTest(void) {
         -0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  1.0f,  1.0f, 1.0f
     };
-    unsigned int VAO,VBO;
+    unsigned int VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,4 * sizeof(float), (void*)(2 * sizeof(float)));
-    
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
     Shader depthMapShader("Source/shader/simpleVertexShader.glsl", "Source/shader/simpleFragmentShader.glsl");
     depthMapShader.use();
     depthMapShader.setInt("uDepthMap", 4);
@@ -1315,12 +1315,12 @@ void shadowTest(void) {
         shadowMapShader.setMat4f("uModel", glm::value_ptr(Model));
         glBindVertexArray(planeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        
+
         glm::mat4 M(1.0f);
         M = glm::scale(M, glm::vec3(3.f, 3.f, 3.f));
         M = glm::translate(M, glm::vec3(0.f, -0.16f, 0.f));
         M = glm::rotate(M, glm::radians(-90.f), glm::vec3(1.f, 0.f, 0.f));
-        M = glm::rotate(M, (float)glm::radians(glfwGetTime()*10), glm::vec3(0., 0., 1.));
+        M = glm::rotate(M, (float)glm::radians(glfwGetTime() * 10), glm::vec3(0., 0., 1.));
 
         shadowMapShader.setMat4f("uModel", glm::value_ptr(M));
         seele.Draw(shadowMapShader);
@@ -1357,18 +1357,18 @@ void shadowTest(void) {
         shadowShader.setMat4f("uLightMVP", glm::value_ptr(lightMVP));
         seele.Draw(shadowShader);
 
-        
+
         lightCubeShader.use();
         lightCubeShader.setMat4f("uView", glm::value_ptr(View));
         lightCubeShader.setMat4f("uProjection", glm::value_ptr(Projection));
         Model = glm::translate(Model, lightPos);
-        Model = glm::scale(Model, glm::vec3(0.2f,0.2f,0.2f));
+        Model = glm::scale(Model, glm::vec3(0.2f, 0.2f, 0.2f));
         lightCubeShader.setMat4f("uModel", glm::value_ptr(Model));
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glDisable(GL_DEPTH_TEST);
-        
+
         depthMapShader.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1546,13 +1546,13 @@ void normalMapTest() {
     glm::vec3 lightPos(0.5f, 1.0f, 0.3f);
     parallaxMapShader.setVec3f("uLightPos", glm::value_ptr(lightPos));
     std::string str = std::string("pLight");
-    parallaxMapShader.setVec3f(str+std::string(".diffuse"), 0.8f, 0.8f, 0.8f);
-    parallaxMapShader.setVec3f(str+std::string(".specular"), 1.0f, 1.0f, 1.0f);
-    parallaxMapShader.setFloat(str+std::string(".Kc"), 1.0f);
-    parallaxMapShader.setFloat(str+std::string(".Kl"),0.09f);
-    parallaxMapShader.setFloat(str+std::string(".Kq"), 0.032f);
-    parallaxMapShader.setFloat(str+std::string(".intensity"), 1.f);
-  
+    parallaxMapShader.setVec3f(str + std::string(".diffuse"), 0.8f, 0.8f, 0.8f);
+    parallaxMapShader.setVec3f(str + std::string(".specular"), 1.0f, 1.0f, 1.0f);
+    parallaxMapShader.setFloat(str + std::string(".Kc"), 1.0f);
+    parallaxMapShader.setFloat(str + std::string(".Kl"), 0.09f);
+    parallaxMapShader.setFloat(str + std::string(".Kq"), 0.032f);
+    parallaxMapShader.setFloat(str + std::string(".intensity"), 1.f);
+
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -1587,11 +1587,11 @@ void normalMapTest() {
         lightCubeShader.setMat4f("uView", glm::value_ptr(View));
         lightCubeShader.setMat4f("uProjection", glm::value_ptr(Projection));
         Model = glm::translate(Model, lightPos);
-        Model = glm::scale(Model, glm::vec3(0.2f,0.2f,0.2f));
+        Model = glm::scale(Model, glm::vec3(0.2f, 0.2f, 0.2f));
         lightCubeShader.setMat4f("uModel", glm::value_ptr(Model));
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -1833,35 +1833,35 @@ void SSAOTest() {
     0.5f,  0.5f, -0.5f,
     -0.5f,  0.5f, -0.5f,
     -0.5f, -0.5f, -0.5f,
-        
+
     -0.5f, -0.5f,  0.5f,
     0.5f, -0.5f,  0.5f,
     0.5f,  0.5f,  0.5f,
     0.5f,  0.5f,  0.5f,
     -0.5f,  0.5f,  0.5f,
     -0.5f, -0.5f,  0.5f,
-        
+
     -0.5f,  0.5f,  0.5f,
     -0.5f,  0.5f, -0.5f,
     -0.5f, -0.5f, -0.5f,
     -0.5f, -0.5f, -0.5f,
     -0.5f, -0.5f,  0.5f,
     -0.5f,  0.5f,  0.5f,
-        
+
     0.5f,  0.5f,  0.5f,
     0.5f,  0.5f, -0.5f,
     0.5f, -0.5f, -0.5f,
     0.5f, -0.5f, -0.5f,
     0.5f, -0.5f,  0.5f,
     0.5f,  0.5f,  0.5f,
-        
+
     -0.5f, -0.5f, -0.5f,
     0.5f, -0.5f, -0.5f,
     0.5f, -0.5f,  0.5f,
     0.5f, -0.5f,  0.5f,
     -0.5f, -0.5f,  0.5f,
     -0.5f, -0.5f, -0.5f,
-        
+
     -0.5f,  0.5f, -0.5f,
     0.5f,  0.5f, -0.5f,
     0.5f,  0.5f,  0.5f,
@@ -1884,7 +1884,7 @@ void SSAOTest() {
             25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
             -25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
             -25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
-        
+
             25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
             -25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
             25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,  25.0f, 25.0f
@@ -1903,7 +1903,7 @@ void SSAOTest() {
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
-        
+
     // 平台贴图
     Texture planeTexture("Source/texture/metal.png");
 
@@ -1932,7 +1932,7 @@ void SSAOTest() {
     unsigned int GBufferFBO;
     glGenFramebuffers(1, &GBufferFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, GBufferFBO);
-    
+
     Texture position = Texture::CreateTexture(SCR_WIDTH, SCR_HEIGHT, GL_RGB16F, GL_RGB, GL_FLOAT);
     glBindTexture(GL_TEXTURE_2D, position.ID);
     // 采样点是有可能拥有超出纹理范围的纹理坐标的，如果设置成循环可能会有奇怪的效果
@@ -1948,7 +1948,7 @@ void SSAOTest() {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, albedoMap.ID, 0);
 
     // - 告诉OpenGL我们将要使用(帧缓冲的)哪种颜色附件来进行渲染
-    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
     glDrawBuffers(3, attachments);
 
     // 绑定渲染缓冲对象
@@ -1967,7 +1967,7 @@ void SSAOTest() {
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "帧缓冲生成不完整！" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    
+
     // SSAO帧缓冲
     unsigned int SSAOFBO;
     glGenFramebuffers(1, &SSAOFBO);
@@ -1998,8 +1998,8 @@ void SSAOTest() {
         // xy随机采样到[-1,1]，z只能采样到[0,1]（正半球）
         // 为什么是z不是y？因为TBN矩阵N在最后，因此最后一维对应法线方向
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0,
-                        randomFloats(generator) * 2.0 - 1.0, 
-                        randomFloats(generator));
+            randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator));
         sample = glm::normalize(sample);
         sample *= randomFloats(generator);
         GLfloat scale = GLfloat(i) / 64.0;
@@ -2013,12 +2013,12 @@ void SSAOTest() {
     // 噪音向量贴图，用来随机获取一个切线方向，变相旋转了样本点集
     vector<glm::vec3> ssaoNoise;
     for (GLuint i = 0; i < 16; i++) {
-        glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, 
-                        randomFloats(generator) * 2.0 - 1.0, 
-                        0.0f); 
+        glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0,
+            randomFloats(generator) * 2.0 - 1.0,
+            0.0f);
         ssaoNoise.push_back(noise);
     }
-    GLuint noiseTexture; 
+    GLuint noiseTexture;
     glGenTextures(1, &noiseTexture);
     glBindTexture(GL_TEXTURE_2D, noiseTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
@@ -2033,14 +2033,14 @@ void SSAOTest() {
         "Source/shader/SSAO/SSAOFragmentShader.glsl");
     Shader SSAOblurShader("Source/shader/SSAO/SSAOblurVertexShader.glsl",
         "Source/shader/SSAO/SSAOblurFragmentShader.glsl");
-    Shader myModelShader("Source/shader/DelayShade/DelayShadeVertexShader.glsl", 
+    Shader myModelShader("Source/shader/DelayShade/DelayShadeVertexShader.glsl",
         "Source/shader/DelayShade/DelayShadeFragmentShader.glsl");
-    Shader outLineShader("Source/shader/outLineVertexShader.glsl", 
+    Shader outLineShader("Source/shader/outLineVertexShader.glsl",
         "Source/shader/outLineFragmentShader.glsl");
     Model seele("Source/model/seele/seele.fbx");
     Shader debugShader("Source/shader/simpleVertexShader.glsl",
         "Source/shader/texFragmentShader.glsl");
-    Shader lightCubeShader("Source/shader/lightVertexShader.glsl", 
+    Shader lightCubeShader("Source/shader/lightVertexShader.glsl",
         "Source/shader/lightFragmentShader.glsl");
     debugShader.use();
     debugShader.setInt("texture1", 0);
@@ -2089,7 +2089,7 @@ void SSAOTest() {
         glm::mat4 M(1.0f);
         M = glm::rotate(M, glm::radians(-90.f), glm::vec3(1.0, 0.0, 0.0));
         auto normModel = glm::transpose(glm::inverse(glm::mat3(M)));
-    
+
         GBufferShader.use();
         glStencilMask(0x00); // 禁止模板缓冲的写入
         GBufferShader.setMat4f("uView", glm::value_ptr(View));
@@ -2233,14 +2233,14 @@ void pbrTest() {
     Texture albedo("Source/texture/rustediron2_basecolor.png");
     Texture metallic("Source/texture/rustediron2_metallic.png");
     Texture roughness("Source/texture/rustediron2_roughness.png");
-    
-    Shader pbrShader("Source/shader/pbr/pbrVertexShader.glsl", 
+
+    Shader pbrShader("Source/shader/pbr/pbrVertexShader.glsl",
         "Source/shader/pbr/pbrFragmentShader.glsl");
     pbrShader.use();
     pbrShader.setInt("uAlbedoMap", 0);
     pbrShader.setInt("uMetallicMap", 1);
     pbrShader.setInt("uRoughnessMap", 2);
-    
+
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -2271,7 +2271,7 @@ void pbrTest() {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, roughness.ID);
         glActiveTexture(GL_TEXTURE0);
-        
+
         glm::mat4 model = glm::mat4(1.0f);
         for (int row = 0; row < nrRows; ++row)
         {
@@ -2382,7 +2382,7 @@ void splitSumTest() {
     /****************************************************************/
     stbi_set_flip_vertically_on_load(true);
     int width, height, nrComponents;
-    float* data = stbi_loadf("Source/texture/thatch_chapel_4k.hdr", &width, &height, &nrComponents, 0);
+    float* data = stbi_loadf("Source/texture/rostock_laage_airport_4k.hdr", &width, &height, &nrComponents, 0);
     unsigned int hdrTexture;
     if (data)
     {
@@ -2554,7 +2554,11 @@ void splitSumTest() {
     /****************************************************************/
     Shader LutGenShader("Source/shader/pbr/LutGenVertexShader.glsl",
         "Source/shader/pbr/LutGenFragmentShader.glsl");
-    Texture brdfLUTTexture = Texture::CreateTexture(512, 512, GL_RG16F, GL_RG, GL_FLOAT);
+    Texture brdfLUTTexture = Texture::CreateTexture(512, 512, GL_RGB16F, GL_RGB, GL_FLOAT);
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture.ID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
@@ -2562,6 +2566,29 @@ void splitSumTest() {
 
     glViewport(0, 0, 512, 512);
     LutGenShader.use();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    /****************************************************************/
+
+    // 生成Eavg贴图
+    /****************************************************************/
+    Shader EavgLutGenShader("Source/shader/pbr/EavgLutGenVertexShader.glsl",
+        "Source/shader/pbr/EavgLutGenFragmentShader.glsl");
+    Texture EavgTexture = Texture::CreateTexture(512, 512, GL_R16F, GL_RGB, GL_FLOAT);
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EavgTexture.ID, 0);
+
+    glViewport(0, 0, 512, 512);
+    EavgLutGenShader.use();
+    EavgLutGenShader.setInt("uEiMap", 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture.ID);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(quadVAO);
@@ -2584,15 +2611,24 @@ void splitSumTest() {
         "Source/shader/pbr/splitSumFragmentShader.glsl");
 
     splitSumTexShader.use();
+    splitSumTexShader.setInt("uNormalMap", 1);
+    splitSumTexShader.setInt("uMetallicMap", 2);
+    splitSumTexShader.setInt("uRoughnessMap", 3);
     splitSumTexShader.setInt("uIrrandianceMap", 4);
     splitSumTexShader.setInt("uPrefilterMap", 5);
     splitSumTexShader.setInt("LUT", 6);
+    splitSumTexShader.setInt("Eavg", 7);
     splitSumShader.use();
     splitSumShader.setInt("uIrrandianceMap", 4);
     splitSumShader.setInt("uPrefilterMap", 5);
     splitSumShader.setInt("LUT", 6);
+    splitSumShader.setInt("Eavg", 7);
 
+    stbi_set_flip_vertically_on_load(false);
     Model myModel("Source/model/Cerberus_by_Andrew_Maximov/Cerberus_LP.FBX");
+    Texture gunNormalMap("Source/model/Cerberus_by_Andrew_Maximov/Textures/Cerberus_N.tga");
+    Texture gunMetalMap("Source/model/Cerberus_by_Andrew_Maximov/Textures/Cerberus_M.tga");
+    Texture gunRoughMap("Source/model/Cerberus_by_Andrew_Maximov/Textures/Cerberus_R.tga");
 
     // 小球的生成行列数及间距
     int nrRows = 7;
@@ -2621,9 +2657,9 @@ void splitSumTest() {
         splitSumShader.setMat4f("uView", glm::value_ptr(View));
         splitSumShader.setVec3f("uCameraPos", glm::value_ptr(mainCamera.Position));
 
-        Model = glm::rotate(Model, (float)glm::radians(90.), glm::vec3(1., 0., 0.));
-        Model = glm::rotate(Model, (float)glm::radians(glfwGetTime() * 10), glm::vec3(0., 1., 0.));
-        Model = glm::translate(Model, glm::vec3(0., 10., 5.));
+        Model = glm::rotate(Model, (float)glm::radians(-90.), glm::vec3(1., 0., 0.));
+        //Model = glm::rotate(Model, (float)glm::radians(glfwGetTime() * 10), glm::vec3(0., 1., 0.));
+        Model = glm::translate(Model, glm::vec3(-5., -10., 0.));
         Model = glm::scale(Model, glm::vec3(0.05, 0.05, 0.05));
         splitSumTexShader.use();
         splitSumTexShader.setMat4f("uProjection", glm::value_ptr(Projection));
@@ -2631,13 +2667,21 @@ void splitSumTest() {
         splitSumTexShader.setMat4f("uModel", glm::value_ptr(Model));
         splitSumTexShader.setVec3f("uCameraPos", glm::value_ptr(mainCamera.Position));
 
-        // 渲染材质小球
+        // 渲染材质小球及模型
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, gunNormalMap.ID);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, gunMetalMap.ID);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, gunRoughMap.ID);
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
         glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
         glActiveTexture(GL_TEXTURE6);
         glBindTexture(GL_TEXTURE_2D, brdfLUTTexture.ID);
+        glActiveTexture(GL_TEXTURE7);
+        glBindTexture(GL_TEXTURE_2D, EavgTexture.ID);
 
         glActiveTexture(GL_TEXTURE0);
         myModel.Draw(splitSumTexShader);
@@ -2693,12 +2737,13 @@ void splitSumTest() {
         glDepthFunc(GL_LESS);
 
         // Debug用
-        //glDisable(GL_DEPTH_TEST);
-        //debugShader.use();
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, debugTexture.ID);
-        //glBindVertexArray(quadVAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        /*glDisable(GL_DEPTH_TEST);
+        glViewport(0,0,512,512);
+        debugShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, EavgTexture.ID);
+        glBindVertexArray(quadVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
 
         glfwSwapBuffers(window);
@@ -2900,7 +2945,7 @@ unsigned int load_cubeMap(const vector<std::string>& faces) {
     for (int i = 0; i < faces.size(); ++i) {
         unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
         if (data) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         }
         else {
@@ -2917,7 +2962,7 @@ unsigned int load_cubeMap(const vector<std::string>& faces) {
     return cubeMapID;
 }
 
-GLFWwindow* Init(int width ,int height, std::string windowName){
+GLFWwindow* Init(int width, int height, std::string windowName) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -2926,7 +2971,7 @@ GLFWwindow* Init(int width ,int height, std::string windowName){
     GLFWwindow* window;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(800, 600, windowName.c_str(), NULL, NULL);
     if (!window) {
         glfwTerminate();
         return nullptr;

@@ -2,7 +2,7 @@
 
 in vec2 vTexCoord;
 
-out vec2 FragColor;
+out vec3 FragColor;
 const float PI = 3.14159265359;
 // µÕ≤Ó“Ï–Ú¡–
 float RadicalInverse_VdC(uint bits) {
@@ -74,13 +74,14 @@ vec3 fresnelSchlick(float VdotH, vec3 F0) {
     return F0 + (1.0 - F0) * pow(clamp(1.0 - VdotH, 0.0, 1.0), 5.0);
 }
 
-vec2 IntegrayBRDF(float NdotV, float roughness) {
+vec3 IntegrayBRDF(float NdotV, float roughness) {
     vec3 V; 
     V.x = sqrt(1 - NdotV * NdotV);
     V.y = 0.;
     V.z = NdotV;
     float A = 0.;
     float B = 0.;
+    float C = 0.;
     vec3 N = vec3(0.0, 0.0, 1.0);
     const uint SAMPLE_COUNT = 1024u;
     for (uint i = 0u; i < SAMPLE_COUNT; ++i) {
@@ -111,11 +112,13 @@ vec2 IntegrayBRDF(float NdotV, float roughness) {
             float Fc = pow(1 - VdotH, 5.0);
             A += (1 - Fc) * G_Vis;
             B += Fc * G_Vis;
+            C += G_Vis;
         }
     }
     A /= float(SAMPLE_COUNT);
     B /= float(SAMPLE_COUNT);
-    return vec2(A, B);
+    C /= float(SAMPLE_COUNT);
+    return vec3(A, B, C);
 }
 
 void main() {
